@@ -10,9 +10,9 @@ Deploy an Express server that implements Basic Authentication, with signup and s
 
 ### Links and Resources
 
-- [GitHub Actions ci/cd]()
+- [GitHub Actions ci/cd](https://github.com/CodingKao/basic-auth/pulls)
 
-- [back-end prod server url]()
+- [back-end prod server url](https://basic-auth-wd0v.onrender.com/)
 
 ### Collaborators
 
@@ -40,4 +40,4 @@ To run tests, after running `npm i`, run the command `npm test`
 
 #### Lab 6 UML
 
-![Lab 6 UML image]()
+![Lab 6 UML image](./assets/auth-uml.png)
