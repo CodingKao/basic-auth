@@ -1,3 +1,6 @@
+
+require('dotenv').config();
+
 'use strict';
 
 
@@ -23,3 +26,4 @@ sequelizeDatabase.sync()
   }).catch(e => {
     console.error('Could not start server'. e.message);
   });
+
