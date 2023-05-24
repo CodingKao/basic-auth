@@ -16,6 +16,7 @@ Deploy an Express server that implements Basic Authentication, with signup and s
 
 ### Collaborators
 
+- Use Ryan Gallaway, Code Fellow Instructor, stater code
 - Kenya Womack
 - Hayden Cooper
 - Coriana Williams
