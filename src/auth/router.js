@@ -1,33 +1,29 @@
 'use strict';
 
 const express = require('express');
-const bcrypt = require('bcrypt');
-
-
-const basicAuth = require('./middleware/basic');
-const { userModel } = require('./models');
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const basicAuth = require('./middleware/index');
+const { Users } = require('./models/index');
 
-router.post('/signup', async (req, res, next) => {
-  // great proof of life
-  // res.status(200).send('this route works');
+router.post('/signup', async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const encryptedPassword = await bcrypt.hash(password, 5);
-    let newUser = await userModel.create({
-      username,
-      password: encryptedPassword,
-    });
-    res.status(200).send(newUser);
-  } catch (err) {
-    console.error(err);
-    next('signup error occurred');
-  }
+    req.body.password = await bcrypt.hash(req.body.password, 5);
+    const record = await Users.create(req.body);
+    res.status(200).json(record);
+  } catch (e) { res.status(403).send('Error Creating User'); }
 });
 
-// signin will require basic auth middleware that PROVES the signin password is equivalent to the hashed password that we have saved in our DB
-router.post('/signin', basicAuth, (req, res, next) => {
-  res.status(200).json(req.user);
+router.post('/signin', basicAuth, (req, res) => {
+  // all the authorization functionality is in the basic/index.js
+  try {
+    res.status(200).send(req.user);
+  } catch (error) {
+    //console.error(error) // uncomment console log for debugging
+    res.status(401).send('Unauthorized user!');
+  }
+
 });
+
 
 module.exports = router;
