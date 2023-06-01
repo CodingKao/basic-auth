@@ -1,6 +1,6 @@
 # LAB - 06
 
-## Project: Api-Server
+## Project: Basic-Authentication
 
 ### Author: Kao Saelor
 
