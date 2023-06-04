@@ -1,17 +1,17 @@
 'use strict';
 
-// 3rd party requirements
 const { Sequelize, DataTypes } = require('sequelize');
-const user = require('./user');
+const  userModel  = require('./users-models');
+
+const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory:': process.env.DATABASE_URL;
+
+// database singleton, creates the connection
+const sequelizeDatabase = new Sequelize(DATABASE_URL);
 
 
-// setup database url
-const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory:' : process.env.DATABASE_URL;
+let Users = userModel(sequelizeDatabase, DataTypes);
 
-// db singleton
-const sequelize = new Sequelize(DATABASE_URL);
-
-// create model using the schema
-const userModel = user(sequelize, DataTypes);
-
-module.exports = { sequelize, userModel };
+module.exports = {
+  sequelizeDatabase,
+  Users,
+};

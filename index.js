@@ -1,13 +1,14 @@
 'use strict';
 
 require('dotenv').config();
+const { sequelizeDatabase } = require('./src/auth/models/index');
+const { start } = require('./src/server');
 const PORT = process.env.PORT || 3002;
-const { sequelize } = require('./src/auth/models');
-const { start } = require('./src/server')
 
-sequelize.sync()
+sequelizeDatabase.sync()
   .then(() => {
-    console.log('Successful DB connection');
+    console.log('DB connection is running');
+
     start(PORT);
   })
-  .catch((err) => console.error(err));
+  .catch(e => console.error(e));

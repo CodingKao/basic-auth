@@ -1,38 +1,33 @@
 'use strict';
 
 const base64 = require('base-64');
+const { Users } = require('../models/index');
 const bcrypt = require('bcrypt');
-const { userModel } = require('../models');
-
 
 const basicAuth = async (req, res, next) => {
-  let { authorization } = req.headers;
-  // console.log('authorization: ', authorization);
-  //                                            Basic username:password
-  // 1. isolate the encoded part of the string - Basic UnlhbjpwYXNz
-  let authString = authorization.split(' ')[1];
-  console.log('authString:', authString);
+  if (!req.headers.authorization) {
+    return res.status(401).send('Unauthorized');
+  }
 
-  // 2. decode the authstring
-  let decodedAuthString = base64.decode(authString);
-  console.log('decodedAuthString:', decodedAuthString);
+  const encodedCredentials = req.headers.authorization.split(' ')[1];
+  const decodedCredentials = base64.decode(encodedCredentials);
+  const [username, password] = decodedCredentials.split(':');
 
-  // 3. I need to isolate the password FROM the decoded string
-  let [username, password] = decodedAuthString.split(':');
-  // console.log('password:', password);
-  
-  let user = await userModel.findOne({where: { username }});
-  // console.log('here.........user:', user);
-  if (user){
-    let validUser = await bcrypt.compare(password, user.password);
-    if(validUser){
-      req.user = user;
-      next();
-    } else {
-      next('Not authorized (incorrect password)');
+  try {
+    const user = await Users.findOne({ where: { username: username } });
+    if (!user) {
+      return res.status(401).send('Unauthorized');
     }
-  } else {
-    next('Not authorized (user doesn\'t exist in DB)');
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).send('Unauthorized');
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(500).send('Server Error');
   }
 };
 
