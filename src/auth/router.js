@@ -15,11 +15,9 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/signin', basicAuth, (req, res) => {
-  // all the authorization functionality is in the basic/index.js
   try {
     res.status(200).send(req.user);
   } catch (error) {
-    //console.error(error) // uncomment console log for debugging
     res.status(401).send('Unauthorized user!');
   }
 
